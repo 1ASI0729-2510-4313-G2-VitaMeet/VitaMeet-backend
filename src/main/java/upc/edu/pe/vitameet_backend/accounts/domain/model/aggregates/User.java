@@ -9,19 +9,25 @@ import upc.edu.pe.vitameet_backend.accounts.domain.model.valueobjects.Password;
 @Table(name = "users")
 public class User extends AuditableAbstractAggregateRoot<User> {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Embedded
     private Email email;
 
     @Embedded
     private Password password;
-    @Id
-    private Long id;
 
     protected User() {}
 
     public User(Email email, Password password) {
         this.email = email;
         this.password = password;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Email getEmail() {
@@ -32,11 +38,8 @@ public class User extends AuditableAbstractAggregateRoot<User> {
         return password;
     }
 
+    // Si decides mantenerlo
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getId() {
-        return id;
     }
 }
