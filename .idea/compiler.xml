@@ -6,7 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="VitaMeet-backend" />
+        <module name="vitameet_backend" />
       </profile>
       <profile name="Annotation profile for Unknown" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -23,6 +23,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="VitaMeet-backend" options="-parameters" />
       <module name="VitaMeet-backend (1)" options="-parameters" />
+      <module name="vitameet_backend" options="-parameters" />
     </option>
   </component>
 </project>

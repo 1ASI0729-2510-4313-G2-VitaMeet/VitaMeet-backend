@@ -38,9 +38,6 @@ public class User extends AuditableAbstractAggregateRoot<User> {
         return password;
     }
 
-    /**
-     * Si deseas mantenelo
-     * */
     public void setId(Long id) {
         this.id = id;
     }
