@@ -9,6 +9,10 @@ import upc.edu.pe.vitameet_backend.shared.domain.model.aggregates.AuditableAbstr
 @Table(name = "appointments")
 public class Appointment extends AuditableAbstractAggregateRoot<Appointment> {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Embedded
     private AppointmentTime appointmentTime;
 
@@ -16,8 +20,6 @@ public class Appointment extends AuditableAbstractAggregateRoot<Appointment> {
     private AppointmentStatus status;
 
     private Long patientId;
-    @Id
-    private Long id;
 
     protected Appointment() {}
 
@@ -41,10 +43,6 @@ public class Appointment extends AuditableAbstractAggregateRoot<Appointment> {
 
     public void cancel() {
         this.status = new AppointmentStatus("CANCELLED");
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getId() {

@@ -13,7 +13,7 @@ import upc.edu.pe.vitameet_backend.accounts.interfaces.rest.transform.*;
 public class AuthController {
 
     private final RegisterUserService registerUserService;
-    private final AuthenticateUserService authenticateUserService;
+     private final AuthenticateUserService authenticateUserService;
 
     public AuthController(RegisterUserService registerUserService, AuthenticateUserService authenticateUserService) {
         this.registerUserService = registerUserService;
