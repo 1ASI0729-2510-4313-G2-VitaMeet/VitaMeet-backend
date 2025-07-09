@@ -2,14 +2,14 @@ package com.vitameet.api.medicalstaff.infrastructure.persistence;
 
 import com.vitameet.api.medicalstaff.domain.model.Doctor;
 import com.vitameet.api.medicalstaff.domain.repositories.DoctorRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+@Service
 public class DoctorRepositoryImpl implements DoctorRepository {
-    
+
     private final JpaDoctorRepository jpaDoctorRepository;
 
     public DoctorRepositoryImpl(JpaDoctorRepository jpaDoctorRepository) {
@@ -27,8 +27,13 @@ public class DoctorRepositoryImpl implements DoctorRepository {
     }
 
     @Override
-    public Optional<Doctor> findByMedicalLicense(String medicalLicense) {
-        return jpaDoctorRepository.findByMedicalLicense(medicalLicense);
+    public Optional<Doctor> findByEmail(String email) {
+        return jpaDoctorRepository.findByEmail(email);
+    }
+
+    @Override
+    public Optional<Doctor> findByLicense(String license) {
+        return jpaDoctorRepository.findByLicense(license);
     }
 
     @Override
@@ -52,7 +57,12 @@ public class DoctorRepositoryImpl implements DoctorRepository {
     }
 
     @Override
-    public boolean existsByMedicalLicense(String medicalLicense) {
-        return jpaDoctorRepository.existsByMedicalLicense(medicalLicense);
+    public boolean existsByEmail(String email) {
+        return jpaDoctorRepository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean existsByLicense(String license) {
+        return jpaDoctorRepository.existsByLicense(license);
     }
 }

@@ -4,7 +4,6 @@ import com.vitameet.api.usermanagement.application.commands.CreatePatientCommand
 import com.vitameet.api.usermanagement.application.commands.UpdatePatientCommand;
 import com.vitameet.api.usermanagement.application.commands.LoginPatientCommand;
 import com.vitameet.api.usermanagement.application.queries.GetPatientByIdQuery;
-import com.vitameet.api.usermanagement.application.queries.GetPatientByDniQuery;
 import com.vitameet.api.usermanagement.application.services.PatientCommandService;
 import com.vitameet.api.usermanagement.application.services.PatientQueryService;
 import com.vitameet.api.usermanagement.domain.model.Patient;
@@ -26,14 +25,15 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/patients")
+@CrossOrigin(origins = "*")
 @Tag(name = "Patients", description = "API para gestión de pacientes")
 public class PatientController {
 
     private final PatientCommandService patientCommandService;
     private final PatientQueryService patientQueryService;
 
-    public PatientController(PatientCommandService patientCommandService, 
-                           PatientQueryService patientQueryService) {
+    public PatientController(PatientCommandService patientCommandService,
+            PatientQueryService patientQueryService) {
         this.patientCommandService = patientCommandService;
         this.patientQueryService = patientQueryService;
     }
@@ -47,27 +47,20 @@ public class PatientController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/dni/{dni}")
-    @Operation(summary = "Obtener paciente por DNI")
-    public ResponseEntity<PatientResponse> getPatientByDni(@PathVariable String dni) {
-        GetPatientByDniQuery query = new GetPatientByDniQuery(dni);
-        return patientQueryService.handle(query)
-                .map(patient -> ResponseEntity.ok(PatientResponse.from(patient)))
-                .orElse(ResponseEntity.notFound().build());
-    }
-
     @PostMapping
     @Operation(summary = "Crear nuevo paciente")
     public ResponseEntity<?> createPatient(@Valid @RequestBody CreatePatientRequest request) {
         try {
             CreatePatientCommand command = new CreatePatientCommand(
-                request.dni(),
-                request.fullName(),
-                request.email(),
-                request.password(),
-                request.birthDate(),
-                request.gender()
-            );
+                    request.name(),
+                    request.email(),
+                    request.password(),
+                    request.age(),
+                    request.phone(),
+                    request.address(),
+                    request.diagnosis(),
+                    request.treatment(),
+                    request.date());
 
             Patient patient = patientCommandService.handle(command);
             PatientResponse response = PatientResponse.from(patient);
@@ -81,18 +74,19 @@ public class PatientController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar paciente")
-    public ResponseEntity<?> updatePatient(@PathVariable Long id, 
-                                          @Valid @RequestBody UpdatePatientRequest request) {
+    public ResponseEntity<?> updatePatient(@PathVariable Long id,
+            @Valid @RequestBody UpdatePatientRequest request) {
         try {
             UpdatePatientCommand command = new UpdatePatientCommand(
-                id,
-                request.dni(),
-                request.fullName(),
-                request.email(),
-                request.password(),
-                request.birthDate(),
-                request.gender()
-            );
+                    id,
+                    request.name(),
+                    request.email(),
+                    request.age(),
+                    request.phone(),
+                    request.address(),
+                    request.diagnosis(),
+                    request.treatment(),
+                    request.date());
 
             Patient patient = patientCommandService.handle(command);
             PatientResponse response = PatientResponse.from(patient);

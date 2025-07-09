@@ -1,7 +1,6 @@
 package com.vitameet.api.usermanagement.application.services;
 
 import com.vitameet.api.usermanagement.application.queries.GetPatientByIdQuery;
-import com.vitameet.api.usermanagement.application.queries.GetPatientByDniQuery;
 import com.vitameet.api.usermanagement.domain.model.Patient;
 import com.vitameet.api.usermanagement.domain.repositories.PatientRepository;
 import org.springframework.stereotype.Service;
@@ -21,9 +20,5 @@ public class PatientQueryService {
 
     public Optional<Patient> handle(GetPatientByIdQuery query) {
         return patientRepository.findById(query.patientId());
-    }
-
-    public Optional<Patient> handle(GetPatientByDniQuery query) {
-        return patientRepository.findByDni(query.dni());
     }
 }

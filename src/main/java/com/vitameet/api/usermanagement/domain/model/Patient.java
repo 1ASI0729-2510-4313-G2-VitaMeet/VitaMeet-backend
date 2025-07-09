@@ -2,80 +2,86 @@ package com.vitameet.api.usermanagement.domain.model;
 
 import com.vitameet.api.shared.domain.BaseEntity;
 import jakarta.persistence.*;
-import java.time.LocalDate;
 
 @Entity
-@Table(name = "pacientes")
+@Table(name = "patients")
 public class Patient extends BaseEntity {
 
-    @Column(name = "dni", length = 20, unique = true, nullable = false)
-    private String dni;
-
-    @Column(name = "nombres", length = 100, nullable = false)
-    private String fullName;
+    @Column(name = "name", length = 100, nullable = false)
+    private String name;
 
     @Column(name = "email", length = 100, unique = true, nullable = false)
     private String email;
 
-    @Column(name = "contrasena", length = 255, nullable = false)
+    @Column(name = "password", length = 255, nullable = false)
     private String password;
 
-    @Column(name = "fecha_nacimiento")
-    private LocalDate birthDate;
+    @Column(name = "role", length = 20, nullable = false)
+    private String role = "Paciente";
 
-    @Column(name = "genero")
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
+    @Column(name = "age")
+    private Integer age;
 
-    public enum Gender {
-        MASCULINO, FEMENINO, OTRO
-    }
+    @Column(name = "phone", length = 20)
+    private String phone;
+
+    @Column(name = "address", length = 255)
+    private String address;
+
+    @Column(name = "diagnosis", length = 500)
+    private String diagnosis;
+
+    @Column(name = "treatment", length = 500)
+    private String treatment;
+
+    @Column(name = "date", length = 50)
+    private String date;
 
     // Constructors
     protected Patient() {
     }
 
-    public Patient(String dni, String fullName, String email, String password,
-            LocalDate birthDate, Gender gender) {
-        this.dni = dni;
-        this.fullName = fullName;
+    public Patient(String name, String email, String password) {
+        this.name = name;
         this.email = email;
         this.password = password;
-        this.birthDate = birthDate;
-        this.gender = gender;
+        this.role = "Paciente";
+    }
+
+    public Patient(String name, String email, String password, Integer age, String phone,
+            String address, String diagnosis, String treatment, String date) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = "Paciente";
+        this.age = age;
+        this.phone = phone;
+        this.address = address;
+        this.diagnosis = diagnosis;
+        this.treatment = treatment;
+        this.date = date;
     }
 
     // Business methods
-    public boolean isAdult() {
-        return birthDate != null &&
-                LocalDate.now().minusYears(18).isAfter(birthDate);
-    }
-
-    public int getAge() {
-        if (birthDate == null)
-            return 0;
-        return LocalDate.now().getYear() - birthDate.getYear();
-    }
-
-    public void updatePersonalInfo(String fullName, String email, LocalDate birthDate, Gender gender) {
-        this.fullName = fullName;
+    public void updateProfile(String name, String email, Integer age, String phone,
+            String address, String diagnosis, String treatment, String date) {
+        this.name = name;
         this.email = email;
-        this.birthDate = birthDate;
-        this.gender = gender;
+        this.age = age;
+        this.phone = phone;
+        this.address = address;
+        this.diagnosis = diagnosis;
+        this.treatment = treatment;
+        this.date = date;
     }
 
     public void changePassword(String newPassword) {
-        // In real implementation, you would hash the password
         this.password = newPassword;
     }
 
     // Getters
-    public String getDni() {
-        return dni;
-    }
-
-    public String getFullName() {
-        return fullName;
+    public String getName() {
+        return name;
     }
 
     public String getEmail() {
@@ -86,11 +92,31 @@ public class Patient extends BaseEntity {
         return password;
     }
 
-    public LocalDate getBirthDate() {
-        return birthDate;
+    public String getRole() {
+        return role;
     }
 
-    public Gender getGender() {
-        return gender;
+    public Integer getAge() {
+        return age;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getDiagnosis() {
+        return diagnosis;
+    }
+
+    public String getTreatment() {
+        return treatment;
+    }
+
+    public String getDate() {
+        return date;
     }
 }

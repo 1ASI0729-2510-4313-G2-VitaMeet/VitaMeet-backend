@@ -2,11 +2,12 @@ package com.vitameet.api.usermanagement.infrastructure.persistence;
 
 import com.vitameet.api.usermanagement.domain.model.Patient;
 import com.vitameet.api.usermanagement.domain.repositories.PatientRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
-@Repository
+@Service
 public class PatientRepositoryImpl implements PatientRepository {
 
     private final JpaPatientRepository jpaPatientRepository;
@@ -16,13 +17,13 @@ public class PatientRepositoryImpl implements PatientRepository {
     }
 
     @Override
-    public Optional<Patient> findById(Long id) {
-        return jpaPatientRepository.findById(id);
+    public List<Patient> findAll() {
+        return jpaPatientRepository.findAll();
     }
 
     @Override
-    public Optional<Patient> findByDni(String dni) {
-        return jpaPatientRepository.findByDni(dni);
+    public Optional<Patient> findById(Long id) {
+        return jpaPatientRepository.findById(id);
     }
 
     @Override
@@ -48,11 +49,6 @@ public class PatientRepositoryImpl implements PatientRepository {
     @Override
     public boolean existsById(Long id) {
         return jpaPatientRepository.existsById(id);
-    }
-
-    @Override
-    public boolean existsByDni(String dni) {
-        return jpaPatientRepository.existsByDni(dni);
     }
 
     @Override

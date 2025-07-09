@@ -5,6 +5,7 @@ import com.vitameet.api.medicalstaff.application.commands.UpdateDoctorCommand;
 import com.vitameet.api.medicalstaff.application.services.DoctorCommandService;
 import com.vitameet.api.medicalstaff.domain.model.Doctor;
 import com.vitameet.api.medicalstaff.interfaces.rest.dto.CreateDoctorRequest;
+import com.vitameet.api.medicalstaff.interfaces.rest.dto.UpdateDoctorRequest;
 import com.vitameet.api.medicalstaff.interfaces.rest.dto.DoctorResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,7 +21,7 @@ import java.util.Map;
 @RequestMapping("/api/v1/doctors")
 @Tag(name = "Doctors", description = "API para gestión de médicos")
 public class DoctorController {
-    
+
     private final DoctorCommandService doctorCommandService;
 
     public DoctorController(DoctorCommandService doctorCommandService) {
@@ -42,10 +43,12 @@ public class DoctorController {
     public ResponseEntity<?> createDoctor(@RequestBody CreateDoctorRequest request) {
         try {
             CreateDoctorCommand command = new CreateDoctorCommand(
-                request.specialty(),
-                request.medicalLicense(),
-                request.officeLocation()
-            );
+                    request.name(),
+                    request.email(),
+                    request.password(),
+                    request.specialty(),
+                    request.license(),
+                    request.experience());
 
             Doctor doctor = doctorCommandService.handle(command);
             return ResponseEntity.ok(DoctorResponse.from(doctor));
@@ -58,13 +61,14 @@ public class DoctorController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar médico")
-    public ResponseEntity<?> updateDoctor(@PathVariable Long id, @RequestBody CreateDoctorRequest request) {
+    public ResponseEntity<?> updateDoctor(@PathVariable Long id, @RequestBody UpdateDoctorRequest request) {
         try {
             UpdateDoctorCommand command = new UpdateDoctorCommand(
-                id,
-                request.specialty(),
-                request.officeLocation()
-            );
+                    id,
+                    request.name(),
+                    request.email(),
+                    request.specialty(),
+                    request.experience());
 
             Doctor doctor = doctorCommandService.handle(command);
             return ResponseEntity.ok(DoctorResponse.from(doctor));

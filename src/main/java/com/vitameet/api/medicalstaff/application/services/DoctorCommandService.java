@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 @Transactional
 public class DoctorCommandService {
-    
+
     private final DoctorRepository doctorRepository;
 
     public DoctorCommandService(DoctorRepository doctorRepository) {
@@ -20,31 +20,37 @@ public class DoctorCommandService {
     }
 
     public Doctor handle(CreateDoctorCommand command) {
-        if (doctorRepository.existsByMedicalLicense(command.medicalLicense())) {
+        if (doctorRepository.existsByLicense(command.license())) {
             throw new IllegalArgumentException("Ya existe un médico con ese número de colegiatura");
         }
 
+        if (doctorRepository.existsByEmail(command.email())) {
+            throw new IllegalArgumentException("Ya existe un médico con ese email");
+        }
+
         Doctor doctor = new Doctor(
-            command.specialty(),
-            command.medicalLicense(),
-            command.officeLocation()
-        );
+                command.name(),
+                command.email(),
+                command.password(),
+                command.specialty(),
+                command.license(),
+                command.experience());
 
         return doctorRepository.save(doctor);
     }
 
     public Doctor handle(UpdateDoctorCommand command) {
         Doctor doctor = doctorRepository.findById(command.doctorId())
-            .orElseThrow(() -> new IllegalArgumentException("Médico no encontrado"));
+                .orElseThrow(() -> new IllegalArgumentException("Médico no encontrado"));
 
-        doctor.updateProfessionalInfo(command.specialty(), command.officeLocation());
+        doctor.updateProfessionalInfo(command.name(), command.email(), command.specialty(), command.experience());
         return doctorRepository.save(doctor);
     }
 
     public void deleteDoctor(Long doctorId) {
         Doctor doctor = doctorRepository.findById(doctorId)
-            .orElseThrow(() -> new IllegalArgumentException("Médico no encontrado"));
-        
+                .orElseThrow(() -> new IllegalArgumentException("Médico no encontrado"));
+
         doctorRepository.delete(doctor);
     }
 

@@ -1,24 +1,29 @@
 package com.vitameet.api.usermanagement.interfaces.rest.dto;
 
 import com.vitameet.api.usermanagement.domain.model.Patient;
-import java.time.LocalDate;
 
 public record PatientResponse(
         Long id,
-        String dni,
-        String fullName,
+        String name,
         String email,
-        LocalDate birthDate,
-        Patient.Gender gender,
-        int age) {
+        String role,
+        Integer age,
+        String phone,
+        String address,
+        String diagnosis,
+        String treatment,
+        String date) {
     public static PatientResponse from(Patient patient) {
         return new PatientResponse(
                 patient.getId(),
-                patient.getDni(),
-                patient.getFullName(),
+                patient.getName(),
                 patient.getEmail(),
-                patient.getBirthDate(),
-                patient.getGender(),
-                patient.getAge());
+                patient.getRole(),
+                patient.getAge(),
+                patient.getPhone(),
+                patient.getAddress(),
+                patient.getDiagnosis(),
+                patient.getTreatment(),
+                patient.getDate());
     }
 }

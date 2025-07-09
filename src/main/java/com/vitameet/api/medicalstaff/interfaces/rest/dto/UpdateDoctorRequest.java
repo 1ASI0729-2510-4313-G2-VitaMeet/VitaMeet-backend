@@ -1,10 +1,8 @@
 package com.vitameet.api.medicalstaff.interfaces.rest.dto;
 
-public record CreateDoctorRequest(
+public record UpdateDoctorRequest(
         String name,
         String email,
-        String password,
         String specialty,
-        String license,
         Integer experience) {
 }
