@@ -1,0 +1,19 @@
+# Ignorar archivos innecesarios para la imagen de Docker
+.git
+.gitignore
+Dockerfile
+DockerFile
+Dockerfile.*
+target/
+.idea
+*.iml
+*.log
+*.md
+README*
+LICENSE
+.vscode/
+.env
+node_modules/
+.mvn/
+mvnw
+mvnw.cmd
