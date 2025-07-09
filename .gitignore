@@ -1,0 +1,48 @@
+# Archivos de compilación
+/target/
+*.log
+
+# Maven Wrapper
+.mvn/
+mvnw
+mvnw.cmd
+
+# IDEs
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+# Eclipse / Spring Tool Suite
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# Archivos temporales / del sistema
+.DS_Store
+Thumbs.db
+
+# Documentos auxiliares
+HELP.md
+
+# Archivos de entorno
+.env
+
+# Excepciones específicas (si realmente las necesitas)
+!**/src/main/**/build/
+!**/src/test/**/build/
+!**/src/main/**/target/
+!**/src/test/**/target/
