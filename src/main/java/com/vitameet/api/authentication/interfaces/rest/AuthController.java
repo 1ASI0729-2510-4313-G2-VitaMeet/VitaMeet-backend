@@ -9,10 +9,14 @@ import com.vitameet.api.authentication.interfaces.rest.dto.RegisterRequest;
 import com.vitameet.api.medicalstaff.domain.model.Doctor;
 import com.vitameet.api.usermanagement.domain.model.Patient;
 import com.vitameet.api.usermanagement.domain.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -20,6 +24,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 public class AuthController {
 
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
     private final AuthenticationService authenticationService;
 
     public AuthController(AuthenticationService authenticationService) {
@@ -27,8 +32,35 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         try {
+            logger.info("Received register request: {}", request);
+            
+            // Validación básica
+            if (request.name() == null || request.name().trim().isEmpty()) {
+                Map<String, String> error = new HashMap<>();
+                error.put("error", "El nombre es requerido");
+                return ResponseEntity.badRequest().body(error);
+            }
+            
+            if (request.email() == null || request.email().trim().isEmpty()) {
+                Map<String, String> error = new HashMap<>();
+                error.put("error", "El email es requerido");
+                return ResponseEntity.badRequest().body(error);
+            }
+            
+            if (request.password() == null || request.password().trim().isEmpty()) {
+                Map<String, String> error = new HashMap<>();
+                error.put("error", "La contraseña es requerida");
+                return ResponseEntity.badRequest().body(error);
+            }
+            
+            if (request.role() == null || request.role().trim().isEmpty()) {
+                Map<String, String> error = new HashMap<>();
+                error.put("error", "El rol es requerido");
+                return ResponseEntity.badRequest().body(error);
+            }
+
             RegisterCommand command = new RegisterCommand(
                     request.name(),
                     request.email(),
@@ -47,25 +79,41 @@ public class AuthController {
             User user = authenticationService.register(command);
             AuthResponse response = mapToAuthResponse(user, request);
 
+            logger.info("User registered successfully with ID: {}", user.getId());
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            logger.error("Error during registration: {}", e.getMessage(), e);
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Error al registrar usuario: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
     }
-
+    
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
-        LoginCommand command = new LoginCommand(request.email(), request.password());
-        Optional<Object> userOpt = authenticationService.login(command);
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        try {
+            logger.info("Login attempt for user: {}", request.email());
+            
+            LoginCommand command = new LoginCommand(request.email(), request.password());
+            Optional<Object> userOpt = authenticationService.login(command);
 
-        if (userOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            if (userOpt.isEmpty()) {
+                Map<String, String> error = new HashMap<>();
+                error.put("error", "Credenciales inválidas");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+            }
+
+            Object user = userOpt.get();
+            AuthResponse response = mapEntityToAuthResponse(user);
+
+            logger.info("Login successful for user: {}", request.email());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.error("Error during login: {}", e.getMessage(), e);
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Error en el login: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
-
-        Object user = userOpt.get();
-        AuthResponse response = mapEntityToAuthResponse(user);
-
-        return ResponseEntity.ok(response);
     }
 
     private AuthResponse mapToAuthResponse(User user, RegisterRequest request) {
